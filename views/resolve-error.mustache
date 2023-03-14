@@ -1,0 +1,48 @@
+{{> header}}
+
+<h3>
+    ⚠️ Resolve Error
+</h3>
+
+<div class="mt-3">
+    <ul>
+        <li>
+            페이지 생성 시각: <span id="page-creation-time"></span>
+        </li>
+        <li>
+            ERROR_CODE: {{error_code}}
+        </li>
+        <li>
+            ERROR_MESSAGE: {{error_message}}
+        </li>
+    </ul>
+</div>
+<div class="mt-3">
+    <button type="button" class="btn btn-danger" onclick="sendShutdownProgram()">문제를 해결하였고, 이 버튼을 눌러 프로그램을 재시작합니다.</button>
+</div>
+<div class="mt-3">
+    <div class="alert alert-secondary" role="alert" style="display: none" id="observing-program-alert">
+        프로그램 재시작을 관찰하고 있습니다. 재시작이 완료되면 페이지가 새로고침됩니다.
+    </div>
+</div>
+
+<script>
+    document.querySelector('#page-creation-time').textContent = new Date().toLocaleString()
+    const sendShutdownProgram = () => {
+        fetch('/shutdown-program', {
+            method: 'put'
+        }).then(() => {
+            document.querySelector('#observing-program-alert').setAttribute('style', '')
+        })
+        setInterval(() => {
+            fetch('/').catch(() => {
+            }).then(r => {
+                if (r.statusCode < 400) {
+                    window.location.reload()
+                }
+            })
+        }, 1000)
+    }
+</script>
+
+{{> footer}}

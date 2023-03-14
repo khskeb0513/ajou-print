@@ -1,0 +1,41 @@
+{{> header}}
+
+<h3>
+    Set Phone Number
+</h3>
+
+<div class="input-group mt-5">
+    <span class="input-group-text" id="basic-addon1">Set Phone Number</span>
+    <input type="text" name="nickname" class="form-control"
+           placeholder="{{#nickname}}{{nickname}}{{/nickname}}{{^nickname}}01012345678{{/nickname}}"
+           aria-label="Phone Number"
+           aria-describedby="basic-addon1">
+    <button class="btn btn-outline-secondary" type="button" onclick="sendNickname()">Apply</button>
+</div>
+<br>
+<div class="alert alert-danger" role="alert" id="nickname-warning" style="display: none">
+    Follow nickname rules : at least 4 character, only number.
+</div>
+<div class="alert alert-success" role="alert" id="nickname-applied" style="display: none">
+    Applied.
+</div>
+<script>
+    function sendNickname() {
+        const nickname = document.querySelector('input[name=nickname]').value
+        if (!nickname || [...nickname].map(v => Number(v)).filter(v => !!v || v === 0).length !== nickname.length || nickname.length < 4) {
+            document.querySelector('#nickname-warning').setAttribute('style', '')
+        } else {
+            document.querySelector('#nickname-warning').setAttribute('style', 'display: none')
+            fetch(`/set-nickname?nickname=${nickname}`, {
+                method: 'put',
+            }).then(r => r.text().then(r => {
+                if (r === 'ok') {
+                    document.querySelector('#nickname-applied').setAttribute('style', '')
+                    setTimeout(() => window.location.reload(), 3000)
+                }
+            }))
+        }
+    }
+</script>
+
+{{> footer}}

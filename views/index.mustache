@@ -1,0 +1,31 @@
+{{> header}}
+
+<h3>
+    Print Queue
+</h3>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+    {{#queue}}
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title" style="cursor: zoom-in" onclick="alert('{{queue_id}}')">{{job_name}}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">[M.P] {{nickname}}</h6>
+                    <span class="card-text">[STATUS] {{job_status}}</span><br>
+                    <span class="card-text">{{length}} 장</span>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">KST {{created_at}}</small>
+                </div>
+            </div>
+        </div>
+    {{/queue}}
+</div>
+<script>
+        {{#completed}}
+        for (const liElement of document.getElementsByClassName('{{.}}')) {
+            liElement.setAttribute('style', 'color: grey')
+        }
+        {{/completed}}
+</script>
+{{> footer}}
