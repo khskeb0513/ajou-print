@@ -3,11 +3,9 @@ FROM node:18-bullseye-slim
 LABEL email="khskeb0513@gmail.com"
 LABEL name="Hyeonseung Kang"
 LABEL version="1.2"
-LABEL description="Helps Ajou University student use the printing system who use various OS. 다양한 운영체제를 사용하는 아주대학교 학생들이 인쇄 시스템을 사용할 수 있도록 돕습니다."
+LABEL description="Helps Ajou University students use the printing system who use various OS. 다양한 운영체제를 사용하는 아주대학교 학생들이 인쇄 시스템을 사용할 수 있도록 돕습니다."
 
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm install
 COPY . .
 RUN apt update
 RUN apt install git -y
