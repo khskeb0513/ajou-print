@@ -19,41 +19,35 @@ export function openServer(printer: Printer) {
         buffers.push(Buffer.from(chunk));
       })
       .on('end', () => {
+        let data = Buffer.from(
+          '0100050100c93d7101470012617474726962757465732d6368617273657400057574662d3848001b617474726962757465732d6e61747572616c2d6c616e67756167650005656e2d757303',
+          'hex',
+        );
         req.body = Buffer.concat(buffers);
         let body = {} as ParsedBodyInterface;
         try {
           body = ipp.parse(req.body) as ParsedBodyInterface;
+          switch (body.operation) {
+            case 'Print-Job':
+              data = printJob(printer, req, body);
+              break;
+            case 'Get-Jobs':
+              data = getJobs(printer, body);
+              break;
+            case 'Get-Printer-Attributes':
+              data = getPrinterAttributes(printer, body);
+              break;
+            case 'Validate-Job':
+              data = validateJob(printer, body);
+              break;
+            default: {
+              break;
+            }
+          }
         } catch (e) {
-          console.error(e);
+          /* empty */
         }
         res.header('Content-Type', 'application/ipp');
-        let data: Buffer;
-        switch (body.operation) {
-          case 'Print-Job':
-            data = printJob(printer, req, body);
-            break;
-          case 'Get-Jobs':
-            data = getJobs(printer, body);
-            break;
-          case 'Get-Printer-Attributes':
-            data = getPrinterAttributes(printer, body);
-            break;
-          case 'Validate-Job':
-            data = validateJob(printer, body);
-            break;
-          default: {
-            data = ipp.serialize({
-              id: body.id,
-              version: '1.0',
-              statusCode: 'server-error-operation-not-supported',
-              'operation-attributes-tag': {
-                'attributes-charset': 'utf-8',
-                'attributes-natural-language': 'en-us',
-              },
-            });
-            break;
-          }
-        }
         res.send(data);
       });
   });
