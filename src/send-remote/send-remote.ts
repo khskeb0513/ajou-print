@@ -37,7 +37,7 @@ export const sendRemote = async (printQueue: PrintQueue) => {
               {
                 size: 'A4',
                 color: !printQueue.color ? 0 : 1,
-                cnt: printQueue.length,
+                cnt: String(process.env.IS_DEV).toUpperCase() !== 'DEV' ? printQueue.length : 1,
               },
             ],
           },
