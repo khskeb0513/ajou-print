@@ -51,7 +51,8 @@ printer.on('data', async (handledJob, _, request) => {
       recursive: true,
     });
     writeFileSync(tmpPath([printQueue.queueId, 'ufr']), buffer.subarray(index));
-    return handeUfrService(printQueue);
+    handeUfrService(printQueue);
+    return;
   }
 
   const nickname = request.url
@@ -78,7 +79,8 @@ printer.on('data', async (handledJob, _, request) => {
       recursive: true,
     });
     writeFileSync(tmpPath([printQueue.queueId, 'pdf']), buffer.subarray(index));
-    return handlePdfService(printQueue);
+    handlePdfService(printQueue);
+    return;
   }
 
   // check it is postscript (end_byte 03 %!PS- 252150532d)
@@ -96,7 +98,8 @@ printer.on('data', async (handledJob, _, request) => {
       recursive: true,
     });
     writeFileSync(tmpPath([printQueue.queueId, 'ps']), buffer.subarray(index));
-    return handlePsService(printQueue);
+    handlePsService(printQueue);
+    return;
   }
 });
 
